@@ -194,7 +194,7 @@ bool ParticleTagger::checkParticle(ReconstructedParticle * particle, int pdg)
 	{
 		angle = pi - angle;
 	}
-	std::cout << "Angle: " << std::pow(angle,0.15) << "\n";
+	//std::cout << "Angle: " << std::pow(angle,0.15) << "\n";
 	float dedx =  particle->getTracks()[0]->getdEdx()* std::abs(std::pow(angle,0.15));
 	int tpchits = particle->getTracks()[0]->getSubdetectorHitNumbers()[6];
 	float pcut = 2.;
