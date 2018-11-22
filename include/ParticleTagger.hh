@@ -35,7 +35,7 @@ using namespace marlin ;
 class ParticleTagger : public Processor
 {
   
- public:
+public:
   
   virtual Processor*  newProcessor() { return new ParticleTagger ; }
   
@@ -68,48 +68,62 @@ class ParticleTagger : public Processor
    */
   virtual void end() ;
   
- private:
+private:
   int getVertexType(EVENT::ReconstructedParticle * particle);
   float GetOffsetErrorSimple(EVENT::ReconstructedParticle * particle);
   void ClearVariables();
   bool checkParticle(EVENT::ReconstructedParticle * particle, int pdg);
   /** Input collection name.
    */
-	std::string _inputPFOCollectionName;
-	std::string _inputTrackCollectionName;
-	std::string _outputPFOCollectionName;
-	std::string _outputTrackCollectionName;
-	std::string _inputExcludeCollectionName;
-	std::string _inputTrackRelCollectionName;
-	std::string _outputRelCollectionName;
-	int _algorithmID;
-	std::vector<std::string> _parameterNames;
-	float _vtxLayerRadius[3];
-	float _ftdLayerRadius[2];
-	std::string algorithmName;
-	  TFile * _hfile;
-	  TTree * _hTree;
-	  int _nEvt;
-	  float a;
-	  float b1;
-	  float b2;
-	  float * abdd;
-	  float * abzz;
+  std::string _inputPFOCollectionName;
+  std::string _inputTrackRelCollectionName;
+  std::string _hfilename;
+  std::string algorithmName;
+  float a;
+  float b1;
+  float b2;
+  float bfield;
 
-	  static const int MAXV = 200;
-	  int _nParticles;	
-	  float _dEdx[MAXV];
-	  float _momentum[MAXV];
-	  int _vtxHits[MAXV];
-	  int _tpcHits[MAXV];
-	  int _ftdHits[MAXV];
-	  int _vtxType[MAXV];
-	  int _type[MAXV];
-	  int _tagType[MAXV];
-	  int _trueType[MAXV];
-	  float _costheta[MAXV];
+  int _algorithmID;
 
-	  float _chi2[MAXV];
+  std::vector<std::string> _parameterNames;
+  float _vtxLayerRadius[3];
+  float _ftdLayerRadius[2];
+  TFile * _hfile;
+  TTree * _hTree;
+  int _nEvt;
+
+  float * abdd;
+  float * abzz;
+
+  static const int MAXV = 200;
+  int _nParticles;	
+  float _dEdx[MAXV];
+  float _dEdx_corrected[MAXV];
+  float _momentum[MAXV];
+  int _vtxHits[MAXV];
+  int _tpcHits[MAXV];
+  int _ftdHits[MAXV];
+  int _vtxType[MAXV];
+  int _type[MAXV];
+  int _tagType[MAXV];
+  int _trueType[MAXV];
+  int _type_algo0[MAXV];
+  int _type_algo1[MAXV];
+  int _type_algo2[MAXV];
+  int _type_algo3[MAXV];
+  int _type_algo4[MAXV];
+
+  float _likelihood_algo0[MAXV];
+  float _likelihood_algo1[MAXV];
+  float _likelihood_algo2[MAXV];
+  float _likelihood_algo3[MAXV];
+  float _likelihood_algo4[MAXV];
+
+  float _costheta[MAXV];
+  float _theta[MAXV];
+
+  float _chi2[MAXV];
 
 } ;
 
