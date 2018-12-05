@@ -26,11 +26,15 @@ using IMPL::LCRelationImpl;
 ParticleTagger aParticleTagger ;
 
 ParticleTagger::ParticleTagger() : Processor("ParticleTagger") {
-  
-  // modify processor description
-	_description = "" ;
+
+	// modify processor description
+	_description = "ParticleTagger" ;
 
 	// input collections
+	registerProcessorParameter( "ROOTFileName",
+			"Output ROOT File Name",
+			_hfilename,
+			std::string("pid.root") );
 	registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
 			"PFOCollection",
 			"Input track collection to convert",
@@ -75,7 +79,7 @@ ParticleTagger::~ParticleTagger() {}
 void ParticleTagger::init() 
 { 
 	// usually a good idea to
-	string _hfilename = "pid.root";
+	//string _hfilename = "pid.root";
 	_hfile = new TFile( _hfilename.c_str(), "RECREATE", _hfilename.c_str() ) ;
 	_hTree = new TTree( "Stats", "My vertex tree!" );
 	_hTree->Branch("nParticles", &_nParticles, "nParticles/I");
@@ -101,10 +105,10 @@ MCParticle * ParticleTagger::GetMCParticleTrackRel(Track * reco, LCCollection * 
 	LCRelationNavigator navigator(trackrel);
 	MCParticle * mcparticle = NULL;
 	/*if (std::abs(secondary->getCharge()) < 0.1)
-	{
+		{
 		return mcparticle;
-	}
-	Track * reco = secondary->getTracks()[0];*/
+		}
+		Track * reco = secondary->getTracks()[0];*/
 	const vector< LCObject * > obj = navigator.getRelatedToObjects(reco);
 	const vector< float > weights = navigator.getRelatedToWeights(reco);
 	if (obj.size() < 1) 
@@ -139,7 +143,7 @@ ReconstructedParticle * ParticleTagger::ReconstructParticle(Track *  track)
 	float phi = track->getPhi();
 	float pt = a * std::abs(Bz / omega);
 	//float p = pt * std::sqrt(1 + tanl * tanl);
-	
+
 	double momentum[3];
 	momentum[0] = pt * std::cos(phi);
 	momentum[1] = pt * std::sin(phi);
@@ -201,21 +205,21 @@ bool ParticleTagger::checkParticle(ReconstructedParticle * particle, int pdg)
 	if (pdg == 321) 
 	{
 		return //(std::abs(particle->getType()) > 13 && // NOT LEPTON
-		tpchits > 60 &&
-		p > pcut &&
-		//p < 30.  &&
-		dedx > 0 && 
-		dedx < a*std::log(p) + b1 &&
-		dedx > a*std::log(p) + b2;
+			tpchits > 60 &&
+			p > pcut &&
+			//p < 30.  &&
+			dedx > 0 && 
+			dedx < a*std::log(p) + b1 &&
+			dedx > a*std::log(p) + b2;
 	}
 	if (pdg == 2212) 
 	{
 		return //(std::abs(particle->getType()) > 13 && // NOT LEPTON
-		tpchits > 60 &&
-		p > pcut &&
-		//p < 30.  &&
-		dedx > 0 && 
-		dedx < a*std::log(p) + b2;
+			tpchits > 60 &&
+			p > pcut &&
+			//p < 30.  &&
+			dedx > 0 && 
+			dedx < a*std::log(p) + b2;
 	}
 	return false;
 }
@@ -294,13 +298,13 @@ void ParticleTagger::processEvent( LCEvent * evt )
 }
 
 void ParticleTagger::check( LCEvent * evt ) { 
-  // nothing to check here - could be used to fill checkplots in reconstruction processor
+	// nothing to check here - could be used to fill checkplots in reconstruction processor
 }
 void ParticleTagger::ClearVariables()
 {
 	for (int i = 0; i < MAXV; i++) 
 	{
-		
+
 	}
 
 }
