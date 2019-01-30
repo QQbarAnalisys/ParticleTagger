@@ -6,6 +6,7 @@
 
 Instructions to run the analysis+ ploting:
 --------------------------------------------------
+First, change appropiately the input file name in both places of the kaontagger.h, function kaontagger::kaontagger(TTree *tree) 
 Example:
 
 > root -l kaontagger.C+
