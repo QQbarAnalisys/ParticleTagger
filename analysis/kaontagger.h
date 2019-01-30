@@ -13,6 +13,7 @@
 #include <TFile.h>
 #include <iostream>
 #include <TH1.h>
+#include <TF1.h>
 #include <vector>
 #include <TString.h>
 #include <TLegend.h>
@@ -82,10 +83,14 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Selection(bool,int);
-   virtual void     Fill_histos_new_ID(int);
+   virtual void     Selection(bool,int,bool);
+   virtual void     Fill_histos_new_ID(int,bool);
    virtual void     Fill_histos_DST_ID(int,int);
+   virtual void     Fill_histos_likelihood_DST_ID(int);
    virtual void     Plots(int);
+   virtual void     PlotsCorrected();
+   virtual void     PlotsProjection();
+   virtual void     PlotsLikelihood();
    virtual void     SimplePlot(int);
    virtual void     Initialize();
    virtual Bool_t   Notify();
@@ -99,6 +104,10 @@ public :
   TH2F *electron_dEdx_truth;
   TH2F *muon_dEdx_truth;
   TH2F *other_dEdx_truth;
+
+  TH2F *kaon_dEdx_corrected_truth;
+  TH2F *proton_dEdx_corrected_truth;
+  TH2F *pion_dEdx_corrected_truth;
 
   TH2F *kaon_dEdx_id;
   TH2F *proton_dEdx_id;
@@ -124,6 +133,14 @@ public :
   TH2F *proton_dEdx_ID_DST_bad;
   TH2F *pion_dEdx_ID_DST_bad;
 
+  TH1F *kaon_likelihood_ID_DST_good;
+  TH1F *proton_likelihood_ID_DST_good;
+  TH1F *pion_likelihood_ID_DST_good;
+
+  TH1F *kaon_likelihood_ID_DST_bad;
+  TH1F *proton_likelihood_ID_DST_bad;
+  TH1F *pion_likelihood_ID_DST_bad;
+
   float n_kaon, n_pion, n_proton, n_electron, n_muon, n_other;
   float cont_pi, cont_p, cont_e, cont_mu;
   float cont_DST_pi, cont_DST_p, cont_DST_e, cont_DST_mu;
@@ -138,9 +155,9 @@ kaontagger::kaontagger(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("pid_l5.root");
+     TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("pid_l5.root");//pid_ttbar_l5.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("pid_l5.root");
+	f = new TFile("pid_l5.root");//pid_ttbar_l5.root");
       }
       f->GetObject("Stats",tree);
 
