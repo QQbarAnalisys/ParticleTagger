@@ -126,6 +126,7 @@ MCParticle * ParticleTagger::GetMCParticleTrackRel(Track * reco, LCCollection * 
 		return mcparticle;
 	}
 	float maxweight = 0.7;
+	
 	for (unsigned int i = 0; i < obj.size(); i++) 
 	{
 		MCParticle * candidate = dynamic_cast< MCParticle * >(obj[i]);
@@ -256,6 +257,7 @@ void  ParticleTagger::TagParticle(ReconstructedParticle * particle, PIDHandler &
 	}
 	//	float dedx_corrected =  particle->getTracks()[0]->getdEdx() * std::pow(angle,0.15);
 	float dedx =  particle->getTracks()[0]->getdEdx();
+
 	_momentum[_nParticles] = p;
 	_type[_nParticles] = particle->getType();
 	_tpcHits[_nParticles] = particle->getTracks()[0]->getSubdetectorHitNumbers()[6];
@@ -303,7 +305,8 @@ void ParticleTagger::processRunHeader( LCRunHeader* run)
 void ParticleTagger::processEvent( LCEvent * evt ) 
 {
 
-	ClearVariables();                                                                                                                                                            
+	ClearVariables();
+
 	LCCollection * pfoCol = evt->getCollection( _inputPFOCollectionName );
 	LCCollection * trackRelCol = evt->getCollection( _inputTrackRelCollectionName );
 	PIDHandler pidh(pfoCol); 
@@ -347,6 +350,7 @@ void ParticleTagger::processEvent( LCEvent * evt )
 				_likelihood_algo3[_nParticles]=likelihood;
 			}		  
 		}
+
 		TagParticle(recoparticle, pidh);
 		PrintParticle(recoparticle);
 		MCParticle * genparticle = GetMCParticleTrackRel(track, trackRelCol);
