@@ -262,7 +262,7 @@ void kaontagger::Selection(bool secondary=false, int algo=3, bool combined=false
 
     for(int i=0;i<nParticles;i++) {
 
-      bool selection= (vtxType[i]==2  && abs(costheta[i])<0.95 && tpcHits[i]>60 );
+      bool selection= (vtxType[i]==2  && abs(costheta[i])<0.95 );
       if (secondary==false) selection=true;
       if (selection == false) continue;
 
@@ -311,7 +311,7 @@ void kaontagger::Selection(bool secondary=false, int algo=3, bool combined=false
   std::cout<<"Well Reco, kaons: "<<kaon_dEdx_ID_DST_good->GetEntries()<<", pions: "<<pion_dEdx_ID_DST_good->GetEntries()<<", protons: "<<proton_dEdx_ID_DST_good->GetEntries()<<std::endl;
   std::cout<<"Contamination in kaons id, pions:: "<<cont_DST_pi<<", protons: "<<cont_DST_p<<", electrons: "<<cont_DST_e<<", muons: "<<cont_DST_mu<<std::endl;
   std::cout<<"  -------------------------------------------------------------------- "<<std::endl;
-  std::cout<<"KAON ID: eff ="<<kaon_dEdx_ID_DST_id->GetEntries()/n_kaon<<"  purity="<<kaon_dEdx_ID_DST_good->GetEntries()/kaon_dEdx_ID_DST_id->GetEntries()<<std::endl;
+  std::cout<<"KAON ID: eff="<<kaon_dEdx_ID_DST_id->GetEntries()/n_kaon<<"  purity="<<kaon_dEdx_ID_DST_good->GetEntries()/kaon_dEdx_ID_DST_id->GetEntries()<<std::endl;
   std::cout<<"  -------------------------------------------------------------------- "<<std::endl;
 
   std::cout<<"  "<<std::endl;
@@ -401,9 +401,6 @@ void kaontagger::PlotsLikelihood() {
 
   
 }
-
-
-
 
 
 void kaontagger::PlotsProjection() {
