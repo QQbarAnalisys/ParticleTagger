@@ -1,0 +1,46 @@
+##########################################################
+# A. Irles, irles @ lal.in2p3.fr
+# LAL-CNRS/IN2P3
+# 30th January 2019
+##########################################################
+
+Instructions to run the analysis+ ploting:
+--------------------------------------------------
+First, change appropiately the input file name in both places of the kaontagger.h, function kaontagger::kaontagger(TTree *tree) 
+Example:
+
+> root -l kaontagger.C+
+root [1] kaontagger a
+a.Selection(true,0,true)
+
+It is basically a code for plotting and comparison of the different methods.
+We rely in having run before the ParticleTagger algorithm and having reated the "KaonTagger" PID output.
+
+Still there is no code writen to optimize the parameters to be used on the ParticleTagger.
+
+Functions implemented:
+---------------------------------------------------
+
+$ -> virtual void     Selection(bool secondary,int algorithm,bool combined);
+
+Main function. Arguments: secondary (true if the analysis is done only for displaced tracks), algorithm (PID algorithm to study), combined (true if we want to improve the results of the KaonTagger by combining it with info of the other algorithms)
+
+algorithms are: 0- LikelihoodPID, 1- LowMomentumID, 2- BasixVariablePID, 3- dEdxPID
+
+
+$ -> Filling and Initializing histograms
+  virtual void     Initialize();
+  virtual void     Fill_histos_new_ID(int,bool);
+  virtual void     Fill_histos_DST_ID(int,int);
+  virtual void     Fill_histos_likelihood_DST_ID(int);
+
+$ -> Plotting
+
+  virtual void     Plots(int algo); --> de/dx truth and de/dx for the identified particles using algorithm "algo"
+  
+  virtual void     PlotsCorrected(); --> How does the de/dx looks if we project it to the diagonal used in ParticleTagger
+  
+  virtual void     PlotsProjection(); --> Project of de/dx of different particles at different values of the momentum (to see how well do we separate the different particles)
+  virtual void     PlotsLikelihood(); --> Plot the likelihood value for the identified kaons
+  virtual void     SimplePlot(int);
+  
