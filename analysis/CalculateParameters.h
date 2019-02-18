@@ -5,8 +5,8 @@
 // found on file: pid_l5.root
 //////////////////////////////////////////////////////////
 
-#ifndef kaontagger_h
-#define kaontagger_h
+#ifndef CalculateParameters_h
+#define CalculateParameters_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -26,7 +26,7 @@
 
 // Header file for the classes stored in the TTree if any.
 
-class kaontagger {
+class CalculateParameters {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -77,21 +77,13 @@ public :
    TBranch        *b_trueType;   //!
    TBranch        *b_dEdx;   //!
 
-   kaontagger(TTree *tree=0);
-   virtual ~kaontagger();
+   CalculateParameters(TTree *tree=0);
+   virtual ~CalculateParameters();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Selection(bool,int,bool);
-   virtual void     Fill_histos_new_ID(int,bool);
-   virtual void     Fill_histos_DST_ID(int,int);
-   virtual void     Fill_histos_likelihood_DST_ID(int);
-   virtual void     Plots(int);
-   virtual void     PlotsCorrected();
-   virtual void     PlotsProjection();
-   virtual void     PlotsLikelihood();
-   virtual void     SimplePlot(int);
+   virtual void     Parameters(bool,float);
    virtual void     Initialize();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
@@ -101,63 +93,21 @@ public :
   TH2F *kaon_dEdx_truth;
   TH2F *proton_dEdx_truth;
   TH2F *pion_dEdx_truth;
-  TH2F *electron_dEdx_truth;
-  TH2F *muon_dEdx_truth;
-  TH2F *other_dEdx_truth;
 
-  TH2F *kaon_dEdx_corrected_truth;
-  TH2F *proton_dEdx_corrected_truth;
-  TH2F *pion_dEdx_corrected_truth;
-
-  TH2F *kaon_dEdx_id;
-  TH2F *proton_dEdx_id;
-  TH2F *pion_dEdx_id;
-
-  TH2F *kaon_dEdx_good;
-  TH2F *proton_dEdx_good;
-  TH2F *pion_dEdx_good;
-
-  TH2F *kaon_dEdx_bad;
-  TH2F *proton_dEdx_bad;
-  TH2F *pion_dEdx_bad;
-  
-  TH2F *kaon_dEdx_ID_DST_id;
-  TH2F *proton_dEdx_ID_DST_id;
-  TH2F *pion_dEdx_ID_DST_id;
-
-  TH2F *kaon_dEdx_ID_DST_good;
-  TH2F *proton_dEdx_ID_DST_good;
-  TH2F *pion_dEdx_ID_DST_good;
-
-  TH2F *kaon_dEdx_ID_DST_bad;
-  TH2F *proton_dEdx_ID_DST_bad;
-  TH2F *pion_dEdx_ID_DST_bad;
-
-  TH1F *kaon_likelihood_ID_DST_good;
-  TH1F *proton_likelihood_ID_DST_good;
-  TH1F *pion_likelihood_ID_DST_good;
-
-  TH1F *kaon_likelihood_ID_DST_bad;
-  TH1F *proton_likelihood_ID_DST_bad;
-  TH1F *pion_likelihood_ID_DST_bad;
-
-  float n_kaon, n_pion, n_proton, n_electron, n_muon, n_other;
-  float cont_pi, cont_p, cont_e, cont_mu;
-  float cont_DST_pi, cont_DST_p, cont_DST_e, cont_DST_mu;
 
 };
 
 #endif
 
-#ifdef kaontagger_cxx
-kaontagger::kaontagger(TTree *tree) : fChain(0) 
+#ifdef CalculateParameters_cxx
+CalculateParameters::CalculateParameters(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-     TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_l5.root");//
+     TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_s5_norestorer.root");//pid_ttbar_s5.root");
       if (!f || !f->IsOpen()) {
-	f = new TFile("/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_l5.root");//
+	f = new TFile("/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_s5_norestorer.root");
       }
       f->GetObject("Stats",tree);
 
@@ -165,19 +115,19 @@ kaontagger::kaontagger(TTree *tree) : fChain(0)
    Init(tree);
 }
 
-kaontagger::~kaontagger()
+CalculateParameters::~CalculateParameters()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-Int_t kaontagger::GetEntry(Long64_t entry)
+Int_t CalculateParameters::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t kaontagger::LoadTree(Long64_t entry)
+Long64_t CalculateParameters::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -190,7 +140,7 @@ Long64_t kaontagger::LoadTree(Long64_t entry)
    return centry;
 }
 
-void kaontagger::Init(TTree *tree)
+void CalculateParameters::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -229,7 +179,7 @@ void kaontagger::Init(TTree *tree)
    Notify();
 }
 
-Bool_t kaontagger::Notify()
+Bool_t CalculateParameters::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -240,18 +190,18 @@ Bool_t kaontagger::Notify()
    return kTRUE;
 }
 
-void kaontagger::Show(Long64_t entry)
+void CalculateParameters::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t kaontagger::Cut(Long64_t entry)
+Int_t CalculateParameters::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-#endif // #ifdef kaontagger_cxx
+#endif // #ifdef CalculateParameters_cxx
