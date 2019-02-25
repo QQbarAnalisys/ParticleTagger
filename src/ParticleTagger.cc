@@ -55,6 +55,12 @@ ParticleTagger::ParticleTagger() : Processor("ParticleTagger") {
 			"B field of ILD, in T",
 			bfield,
 			bfield);
+	pcut=2;                         
+	registerProcessorParameter( "Pcut",
+			"p cut for the PID",
+			pcut,     
+			pcut);
+
 	registerProcessorParameter( "NewPID",
 			"New kaon PID tagger",
 			algorithmName,
@@ -99,6 +105,9 @@ void ParticleTagger::init()
 	_hTree->Branch("likelihood_algo3", _likelihood_algo3, "likelihood_algo3[nParticles]/F");
 	_hTree->Branch("likelihood_algo4", _likelihood_algo4, "likelihood_algo4[nParticles]/F");
 
+	_hTree->Branch("TOFFirstHit", _TOFFirstHit, "_TOFFirstHit[nParticles]/F");
+	_hTree->Branch("TOFClosestHits", _TOFClosestHits, "_TOFClosestHits[nParticles]/F");                                                          
+	_hTree->Branch("TOFClosestHitsError", _TOFClosestHitsError, "_TOFClosestHitsError[nParticles]/F");                                                                                                                        
 	_hTree->Branch("vtxType", _vtxType, "vtxType[nParticles]/I");
 	_hTree->Branch("trueType", _trueType, "trueType[nParticles]/I");
 	_hTree->Branch("dEdx", _dEdx, "dEdx[nParticles]/F");
@@ -126,11 +135,10 @@ MCParticle * ParticleTagger::GetMCParticleTrackRel(Track * reco, LCCollection * 
 		return mcparticle;
 	}
 	float maxweight = 0.7;
-	
 	for (unsigned int i = 0; i < obj.size(); i++) 
 	{
 		MCParticle * candidate = dynamic_cast< MCParticle * >(obj[i]);
-		if (std::abs(candidate->getCharge()) < 0.09) 
+		if (fabs(candidate->getCharge()) < 0.09) 
 		{
 			std::cout << "WARNING: neutral truthlink for particle\n";
 			continue;
@@ -151,7 +159,7 @@ ReconstructedParticle * ParticleTagger::ReconstructParticle(Track *  track)
 	float omega = track->getOmega();
 	float tanl = track->getTanLambda();
 	float phi = track->getPhi();
-	float pt = a * std::abs(Bz / omega);
+	float pt = a * fabs(Bz / omega);
 	//float p = pt * std::sqrt(1 + tanl * tanl);
 
 	double momentum[3];
@@ -159,7 +167,7 @@ ReconstructedParticle * ParticleTagger::ReconstructParticle(Track *  track)
 	momentum[1] = pt * std::sin(phi);
 	momentum[2] = pt * tanl;
 
-	float charge = Bz / omega / std::abs(Bz / omega);
+	float charge = Bz / omega / fabs(Bz / omega);
 	ReconstructedParticleImpl * result = new ReconstructedParticleImpl();
 	result->setCharge(charge);
 	result->setMomentum(momentum);
@@ -187,7 +195,7 @@ void ParticleTagger::PrintParticle(ReconstructedParticle * particle)
 	{
 		dedx = particle->getTracks()[0]->getdEdx() * 1e6;
 	}
-	streamlog_out(DEBUG) <<"|"<<std::abs(particle->getType())<<"\t\t|"<<(int)particle->getCharge()<<"\t\t|"<< dedx  <<"\t\t|"<<MathOperator::getModule(particle->getMomentum()) <<"\t\t|\n";
+	streamlog_out(DEBUG) <<"|"<<fabs(particle->getType())<<"\t\t|"<<(int)particle->getCharge()<<"\t\t|"<< dedx  <<"\t\t|"<<MathOperator::getModule(particle->getMomentum()) <<"\t\t|\n";
 
 }
 void ParticleTagger::PrintParticle(MCParticle * particle)
@@ -204,19 +212,19 @@ bool ParticleTagger::checkParticle(ReconstructedParticle * particle, int pdg)
 {
 	float p  = MathOperator::getModule(particle->getMomentum());
 	vector<float> direction = MathOperator::getDirection(particle->getMomentum());
-	float angle = std::abs(MathOperator::getAngles(direction)[1]);
+	float angle = fabs(MathOperator::getAngles(direction)[1]);
 	float pi = 3.1415;
 	if (angle > pi / 2) 
 	{
 		angle = pi - angle;
 	}
 	//std::cout << "Angle: " << std::pow(angle,0.15) << "\n";
-	float dedx =  particle->getTracks()[0]->getdEdx()*1e6;//*std::abs(std::pow(angle,0.15));
+	float dedx =  particle->getTracks()[0]->getdEdx()*1e6;//*fabs(std::pow(angle,0.15));
 	int tpchits = particle->getTracks()[0]->getSubdetectorHitNumbers()[6];
-	float pcut = 2.;
+	//  float pcut = 2.;
 	if (pdg == 211) 
 	{
-		return //(std::abs(particle->getType()) > 13 && // NOT LEPTON
+		return //(fabs(particle->getType()) > 13 && // NOT LEPTON
 			//tpchits > 60 &&
 			//p > pcut &&
 			//p < 30.  &&
@@ -225,7 +233,7 @@ bool ParticleTagger::checkParticle(ReconstructedParticle * particle, int pdg)
 	}
 	if (pdg == 321) 
 	{
-		return //(std::abs(particle->getType()) > 13 && // NOT LEPTON
+		return //(fabs(particle->getType()) > 13 && // NOT LEPTON
 			//tpchits > 60 &&
 			//p > pcut &&
 			//p < 30.  &&
@@ -235,7 +243,7 @@ bool ParticleTagger::checkParticle(ReconstructedParticle * particle, int pdg)
 	}
 	if (pdg == 2212) 
 	{
-		return //(std::abs(particle->getType()) > 13 && // NOT LEPTON
+		return //(fabs(particle->getType()) > 13 && // NOT LEPTON
 			//tpchits > 60 &&
 			//p > pcut &&
 			//p < 30.  &&
@@ -246,7 +254,8 @@ bool ParticleTagger::checkParticle(ReconstructedParticle * particle, int pdg)
 }
 void  ParticleTagger::TagParticle(ReconstructedParticle * particle, PIDHandler & pidh)
 {
-	float p  = MathOperator::getModule(particle->getMomentum());
+	<<<<<<< HEAD
+		float p  = MathOperator::getModule(particle->getMomentum());
 	vector<float> direction = MathOperator::getDirection(particle->getMomentum());
 	float angle = (MathOperator::getAngles(direction)[1]);
 	float pi = 3.1415;
@@ -291,6 +300,52 @@ void  ParticleTagger::TagParticle(ReconstructedParticle * particle, PIDHandler &
 
 	_type_algo4[_nParticles]=_tagType[_nParticles];
 	_likelihood_algo4[_nParticles]=1.0;
+	=======
+		float p  = MathOperator::getModule(particle->getMomentum());
+	vector<float> direction = MathOperator::getDirection(particle->getMomentum());
+	float angle = (MathOperator::getAngles(direction)[1]);
+	float pi = 3.1415;
+
+	if (angle > pi / 2) 
+	{
+		angle = pi- angle;
+	}
+	//	float dedx_corrected =  particle->getTracks()[0]->getdEdx() * std::pow(angle,0.15);
+	float dedx =  particle->getTracks()[0]->getdEdx();
+	_momentum[_nParticles] = p;
+	_type[_nParticles] = particle->getType();
+	_tpcHits[_nParticles] = particle->getTracks()[0]->getSubdetectorHitNumbers()[6];
+	_dEdx[_nParticles] = dedx;
+	_costheta[_nParticles] = std::cos(angle);
+	_theta[_nParticles] = angle;
+
+
+	bool tagged = false;
+	vector<float> parameters;
+	if (checkParticle(particle,321))
+	{
+		_tagType[_nParticles]  = 321;
+		tagged = true;
+	}
+	if (checkParticle(particle,2212))
+	{
+		_tagType[_nParticles]  = 2212;
+		tagged = true;
+	}
+	if (checkParticle(particle,211))
+	{
+		_tagType[_nParticles]  = 211;
+		tagged = true;
+	}
+	if (!tagged) 
+	{
+		_tagType[_nParticles]  = 0;
+	}
+	pidh.setParticleID(particle, _tagType[_nParticles], _tagType[_nParticles], 1.0, _algorithmID, parameters);
+
+	_type_algo4[_nParticles]=_tagType[_nParticles];
+	_likelihood_algo4[_nParticles]=1.0;
+	>>>>>>> 0256cea59990aab63b851b12001370ff0aad6b2e
 
 
 }
@@ -304,31 +359,30 @@ void ParticleTagger::processRunHeader( LCRunHeader* run)
 
 void ParticleTagger::processEvent( LCEvent * evt ) 
 {
-
-	ClearVariables();
-
+	ClearVariables();                                                                                                                                                            
 	LCCollection * pfoCol = evt->getCollection( _inputPFOCollectionName );
 	LCCollection * trackRelCol = evt->getCollection( _inputTrackRelCollectionName );
 	PIDHandler pidh(pfoCol); 
 	_algorithmID = pidh.addAlgorithm(algorithmName, _parameterNames);
-	TString myAlgorithmName[4];
+	TString myAlgorithmName[5];
 	myAlgorithmName[0]="LikelihoodPID";
 	myAlgorithmName[1]="LowMomMuID";
 	myAlgorithmName[2]="BasicVariablePID";
 	myAlgorithmName[3]="dEdxPID";
+	myAlgorithmName[4]="TOFEstimators50ps";
 
 	int total = pfoCol->getNumberOfElements();
 	_nParticles = 0;
 	for (int i = 0; i < total; i++) 
 	{
 		ReconstructedParticle * recoparticle =  static_cast< ReconstructedParticle * > (pfoCol->getElementAt(i));
-		if (abs(recoparticle->getCharge()) < 0.5 || MathOperator::getModule(recoparticle->getMomentum()) < 0.05) 
+		if (fabs(recoparticle->getCharge()) < 0.5 || MathOperator::getModule(recoparticle->getMomentum()) < 0.05) 
 		{
 			continue;
 		}
 		Track * track = recoparticle->getTracks()[0];
 		//tag particle using provided algorithms
-		for(int j=0; j<4;j++) {                                                                                                                     
+		for(int j=0; j<5;j++) {                                                                                                                     
 			int pid = pidh.getAlgorithmID(myAlgorithmName[j].Data());
 			int pdg = pidh.getParticleID(recoparticle, pid).getPDG();
 			double likelihood=pidh.getParticleID(recoparticle, pid).getLikelihood();
@@ -348,13 +402,25 @@ void ParticleTagger::processEvent( LCEvent * evt )
 			if(j==3) {
 				_type_algo3[_nParticles]=pdg;
 				_likelihood_algo3[_nParticles]=likelihood;
-			}		  
+			}	
+			if(j==4) {
+				int index = pidh.getParameterIndex(pid, "TOFFirstHit"); 
+				const ParticleID& pid_tof = pidh.getParticleID(recoparticle,pid);
+				vector<float> params = pid_tof.getParameters();
+				if(params.size()>0) {
+					_TOFFirstHit[_nParticles]=params.at(index);
+					index = pidh.getParameterIndex(pid, "TOFClosestHits");
+					_TOFClosestHits[_nParticles]=params.at(index); 
+					index = pidh.getParameterIndex(pid, "TOFClosestHitsError");                                                                                          
+					_TOFClosestHitsError[_nParticles]=params.at(index); 
+					//TOFFirstHit TOFClosestHits TOFClosestHitsError TOFFlightLength TOFLastTrkHit TOFLastTrkHitFlightLength
+				}
+			}	  
 		}
-
 		TagParticle(recoparticle, pidh);
 		PrintParticle(recoparticle);
 		MCParticle * genparticle = GetMCParticleTrackRel(track, trackRelCol);
-		_trueType[_nParticles]  =(genparticle)? std::abs(genparticle->getPDG()):0;
+		_trueType[_nParticles]  =(genparticle)? fabs(genparticle->getPDG()):0;
 		_vtxType[_nParticles] = getVertexType(recoparticle);
 		_nParticles++;
 	}
