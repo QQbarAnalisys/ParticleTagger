@@ -254,54 +254,7 @@ bool ParticleTagger::checkParticle(ReconstructedParticle * particle, int pdg)
 }
 void  ParticleTagger::TagParticle(ReconstructedParticle * particle, PIDHandler & pidh)
 {
-	<<<<<<< HEAD
-		float p  = MathOperator::getModule(particle->getMomentum());
-	vector<float> direction = MathOperator::getDirection(particle->getMomentum());
-	float angle = (MathOperator::getAngles(direction)[1]);
-	float pi = 3.1415;
-
-	if (angle > pi / 2) 
-	{
-		angle = pi- angle;
-	}
-	//	float dedx_corrected =  particle->getTracks()[0]->getdEdx() * std::pow(angle,0.15);
-	float dedx =  particle->getTracks()[0]->getdEdx();
-
-	_momentum[_nParticles] = p;
-	_type[_nParticles] = particle->getType();
-	_tpcHits[_nParticles] = particle->getTracks()[0]->getSubdetectorHitNumbers()[6];
-	_dEdx[_nParticles] = dedx;
-	_costheta[_nParticles] = std::cos(angle);
-	_theta[_nParticles] = angle;
-
-
-	bool tagged = false;
-	vector<float> parameters;
-	if (checkParticle(particle,321))
-	{
-		_tagType[_nParticles]  = 321;
-		tagged = true;
-	}
-	if (checkParticle(particle,2212))
-	{
-		_tagType[_nParticles]  = 2212;
-		tagged = true;
-	}
-	if (checkParticle(particle,211))
-	{
-		_tagType[_nParticles]  = 211;
-		tagged = true;
-	}
-	if (!tagged) 
-	{
-		_tagType[_nParticles]  = 0;
-	}
-	pidh.setParticleID(particle, _tagType[_nParticles], _tagType[_nParticles], 1.0, _algorithmID, parameters);
-
-	_type_algo4[_nParticles]=_tagType[_nParticles];
-	_likelihood_algo4[_nParticles]=1.0;
-	=======
-		float p  = MathOperator::getModule(particle->getMomentum());
+	float p  = MathOperator::getModule(particle->getMomentum());
 	vector<float> direction = MathOperator::getDirection(particle->getMomentum());
 	float angle = (MathOperator::getAngles(direction)[1]);
 	float pi = 3.1415;
@@ -345,8 +298,6 @@ void  ParticleTagger::TagParticle(ReconstructedParticle * particle, PIDHandler &
 
 	_type_algo4[_nParticles]=_tagType[_nParticles];
 	_likelihood_algo4[_nParticles]=1.0;
-	>>>>>>> 0256cea59990aab63b851b12001370ff0aad6b2e
-
 
 }
 
