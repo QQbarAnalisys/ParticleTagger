@@ -61,7 +61,7 @@ ENDIF()
 ### LIBRARY #################################################################
 
 # definitions to pass to the compiler
-ADD_DEFINITIONS( "-Wall -ansi -pedantic -std=gnu++11" )
+ADD_DEFINITIONS( "-g -Wall -ansi -pedantic -std=gnu++11" )
 ADD_DEFINITIONS( "-Wno-long-long" )
 
 # include directories

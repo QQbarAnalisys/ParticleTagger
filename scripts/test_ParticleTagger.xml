@@ -1,0 +1,36 @@
+<marlin>
+  <!--########  Execute  ######################################## -->
+<execute>
+  <processor name="MyParticleTagger"/>
+  <processor name="DSTOutput"/>
+</execute>
+
+<!--########  Global  ######################################## -->
+<global>
+  <parameter name="LCIOInputFiles">
+    /nfs/dust/ilc/user/airqui/bbbar/QQbarAnalysis/test/rv02-00-01.sv02-00-01.mILD_l5_o1_v02.E500-TDR_ws.I250114.P2f_z_h.eL.pR.n042.d_dstm_10410_126.slcio
+  </parameter>
+  <!--parameter name="MaxRecordNumber" value="100"/-->  
+  <parameter name="GearXMLFile" value="gear_ILD_l5_o1_v02.xml"/>
+  <parameter name="SkipNEvents" value="0"/>
+  <parameter name="SupressCheck" value="false"/>
+  <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> MESSAGE </parameter>
+  <parameter name="RandomSeed" value="1234567890" />
+</global>
+
+<processor name="DSTOutput" type="LCIOOutputProcessor">
+  <parameter name="LCIOOutputFile" type="string" > test_particle_tagger_500GeV_l5.slcio </parameter>
+  <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
+</processor>
+
+<processor name="MyParticleTagger" type="ParticleTagger">
+  <parameter name="ROOTFileName" type="string" > pid_l5.root </parameter>
+  <parameter name="NewPID" type="string" > KaonTagger </parameter>
+  <parameter name="PFOCollection" type="string" > PandoraPFOs </parameter>
+  <parameter name="TrackRelCollection" type="string" > MarlinTrkTracksMCTruthLink </parameter>
+  <parameter name="slope_kaon_selection" type="float" > 0.019 </parameter>
+  <parameter name="upper_limit_kaon_selection" type="float" > 0.1115 </parameter> 
+  <parameter name="lower_limit_kaon_selection" type="float" > 0.096 </parameter> 
+</processor>
+
+</marlin>
