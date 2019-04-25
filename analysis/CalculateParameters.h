@@ -51,12 +51,12 @@ public :
    Float_t         likelihood_algo2[98];   //[nParticles]
    Float_t         likelihood_algo3[98];   //[nParticles]
    Float_t         likelihood_algo4[98];   //[nParticles]
-   Float_t         TOFFirstHit[98];   //[nParticles]
+   /*   Float_t         TOFFirstHit[98];   //[nParticles]
    Float_t         TOFClosestHits[98];   //[nParticles]
    Float_t         TOFClosestHitsError[98];   //[nParticles]
    Float_t         TOFFlightLength[98];   //[nParticles]
    Float_t         TOFLastTrkHit[98];   //[nParticles]
-   Float_t         TOFLastTrkHitFlightLength[98];   //[nParticles]
+   Float_t         TOFLastTrkHitFlightLength[98];   //[nParticles]*/
    Int_t           vtxType[98];   //[nParticles]
    Int_t           trueType[98];   //[nParticles]
    Float_t         dEdx[98];   //[nParticles]
@@ -79,12 +79,12 @@ public :
    TBranch        *b_likelihood_algo2;   //!
    TBranch        *b_likelihood_algo3;   //!
    TBranch        *b_likelihood_algo4;   //!
-   TBranch        *b_TOFFirstHit;   //!
+   /*   TBranch        *b_TOFFirstHit;   //!
    TBranch        *b_TOFClosestHits;   //!
    TBranch        *b_TOFClosestHitsError;   //!
    TBranch        *b_TOFFlightLength;   //!
    TBranch        *b_TOFLastTrkHit;   //!
-   TBranch        *b_TOFLastTrkHitFlightLength;   //!
+   TBranch        *b_TOFLastTrkHitFlightLength;   //!*/
    TBranch        *b_vtxType;   //!
    TBranch        *b_trueType;   //!
    TBranch        *b_dEdx;   //!
@@ -105,7 +105,7 @@ public :
   TH2F *kaon_dEdx_truth;
   TH2F *proton_dEdx_truth;
   TH2F *pion_dEdx_truth;
-
+  /*
   TH2F *kaon_TOFFirstHit_truth;
   TH2F *proton_TOFFirstHit_truth;
   TH2F *pion_TOFFirstHit_truth;
@@ -125,6 +125,7 @@ public :
   TH2F *kaon_TOFLastTrkHitFlightLength_truth;
   TH2F *proton_TOFLastTrkHitFlightLength_truth;
   TH2F *pion_TOFLastTrkHitFlightLength_truth;
+  */
 
 };
 
@@ -204,12 +205,12 @@ void CalculateParameters::Init(TTree *tree)
    fChain->SetBranchAddress("likelihood_algo2", likelihood_algo2, &b_likelihood_algo2);
    fChain->SetBranchAddress("likelihood_algo3", likelihood_algo3, &b_likelihood_algo3);
    fChain->SetBranchAddress("likelihood_algo4", likelihood_algo4, &b_likelihood_algo4);
-   fChain->SetBranchAddress("TOFFirstHit", TOFFirstHit, &b_TOFFirstHit);
+   /*   fChain->SetBranchAddress("TOFFirstHit", TOFFirstHit, &b_TOFFirstHit);
    fChain->SetBranchAddress("TOFClosestHits", TOFClosestHits, &b_TOFClosestHits);
    fChain->SetBranchAddress("TOFClosestHitsError", TOFClosestHitsError, &b_TOFClosestHitsError);
    fChain->SetBranchAddress("TOFFlightLength", TOFFlightLength, &b_TOFFlightLength);
    fChain->SetBranchAddress("TOFLastTrkHit", TOFLastTrkHit, &b_TOFLastTrkHit);
-   fChain->SetBranchAddress("TOFLastTrkHitFlightLength", TOFLastTrkHitFlightLength, &b_TOFLastTrkHitFlightLength);
+   fChain->SetBranchAddress("TOFLastTrkHitFlightLength", TOFLastTrkHitFlightLength, &b_TOFLastTrkHitFlightLength);*/
    fChain->SetBranchAddress("vtxType", vtxType, &b_vtxType);
    fChain->SetBranchAddress("trueType", trueType, &b_trueType);
    fChain->SetBranchAddress("dEdx", dEdx, &b_dEdx);

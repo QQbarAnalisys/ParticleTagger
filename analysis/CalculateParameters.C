@@ -33,7 +33,7 @@ void CalculateParameters::Initialize() {
   for(int i=1;i<100;i++) binsy[i]=binsy[i-1]+100./100.;
   nbinnumy=99;
 
-  kaon_TOFFirstHit_truth = new TH2F("kaon_TOFFirstHit_truth","kaon_TOFFirstHit_truth",nbinnum_p,bins_p,nbinnumy,binsy);
+  /*  kaon_TOFFirstHit_truth = new TH2F("kaon_TOFFirstHit_truth","kaon_TOFFirstHit_truth",nbinnum_p,bins_p,nbinnumy,binsy);
   proton_TOFFirstHit_truth = new TH2F("proton_TOFFirstHit_truth","proton_TOFFirstHit_truth",nbinnum_p,bins_p,nbinnumy,binsy);
   pion_TOFFirstHit_truth = new TH2F("pion_TOFFirstHit_truth","pion_TOFFirstHit_truth",nbinnum_p,bins_p,nbinnumy,binsy);
 
@@ -60,7 +60,7 @@ void CalculateParameters::Initialize() {
   kaon_TOFLastTrkHit_truth = new TH2F("kaon_TOFLastTrkHit_truth","kaon_TOFLastTrkHit_truth",nbinnum_p,bins_p,nbinnumy,binsy);
   proton_TOFLastTrkHit_truth = new TH2F("proton_TOFLastTrkHit_truth","proton_TOFLastTrkHit_truth",nbinnum_p,bins_p,nbinnumy,binsy);
   pion_TOFLastTrkHit_truth = new TH2F("pion_TOFLastTrkHit_truth","pion_TOFLastTrkHit_truth",nbinnum_p,bins_p,nbinnumy,binsy);
-
+  */
 
 }
 
@@ -88,27 +88,27 @@ void CalculateParameters::Parameters(bool secondary=false, float momentum_min =1
 
       if(trueType[i]==321) {
        	kaon_dEdx_truth->Fill(momentum[i],dEdx[i]*1e6);
-	kaon_TOFFirstHit_truth->Fill(momentum[i],TOFFirstHit[i]);
+	/*	kaon_TOFFirstHit_truth->Fill(momentum[i],TOFFirstHit[i]);
 	kaon_TOFClosestHits_truth->Fill(momentum[i],TOFClosestHits[i]);
 	kaon_TOFFlightLength_truth->Fill(momentum[i],TOFFlightLength[i]);
 	kaon_TOFLastTrkHit_truth->Fill(momentum[i],TOFLastTrkHit[i]);
-	kaon_TOFLastTrkHitFlightLength_truth->Fill(momentum[i],TOFLastTrkHitFlightLength[i]);
+	kaon_TOFLastTrkHitFlightLength_truth->Fill(momentum[i],TOFLastTrkHitFlightLength[i]);*/
       }
       if(trueType[i]==2212) {
      	proton_dEdx_truth->Fill(momentum[i],dEdx[i]*1e6);
-	proton_TOFFirstHit_truth->Fill(momentum[i],TOFFirstHit[i]);
+	/*	proton_TOFFirstHit_truth->Fill(momentum[i],TOFFirstHit[i]);
 	proton_TOFClosestHits_truth->Fill(momentum[i],TOFClosestHits[i]);
 	proton_TOFFlightLength_truth->Fill(momentum[i],TOFFlightLength[i]);
 	proton_TOFLastTrkHit_truth->Fill(momentum[i],TOFLastTrkHit[i]);
-	proton_TOFLastTrkHitFlightLength_truth->Fill(momentum[i],TOFLastTrkHitFlightLength[i]);
+	proton_TOFLastTrkHitFlightLength_truth->Fill(momentum[i],TOFLastTrkHitFlightLength[i]);*/
       }
       if(trueType[i]==211) {
      	pion_dEdx_truth->Fill(momentum[i],dEdx[i]*1e6);
-	pion_TOFFirstHit_truth->Fill(momentum[i],TOFFirstHit[i]);
+	/*	pion_TOFFirstHit_truth->Fill(momentum[i],TOFFirstHit[i]);
 	pion_TOFClosestHits_truth->Fill(momentum[i],TOFClosestHits[i]);
 	pion_TOFFlightLength_truth->Fill(momentum[i],TOFFlightLength[i]);
 	pion_TOFLastTrkHit_truth->Fill(momentum[i],TOFLastTrkHit[i]);
-	pion_TOFLastTrkHitFlightLength_truth->Fill(momentum[i],TOFLastTrkHitFlightLength[i]);
+	pion_TOFLastTrkHitFlightLength_truth->Fill(momentum[i],TOFLastTrkHitFlightLength[i]);*/
       }
       
     }//for 
@@ -124,6 +124,7 @@ void CalculateParameters::Parameters(bool secondary=false, float momentum_min =1
   c_test->cd(1);
   
   gPad->SetLogx();
+  /*
   for(int i=0; i<33; i++){
     for(int j=0; j<99; j++){
       if(pion_TOFFirstHit_truth->GetBinContent(i+1,j+1)>1) pion_TOFFirstHit_truth->SetBinContent(i+1,j+1,50./pion_TOFFirstHit_truth->GetBinContent(i+1,j+1));
@@ -238,41 +239,41 @@ void CalculateParameters::Parameters(bool secondary=false, float momentum_min =1
 
   c_test->cd(5);
   //gPad->SetLogx();
-  /* 
-     for(int i=0; i<33; i++){
-    for(int j=0; j<99; j++){
-      // if(j>80)  pion_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
+  
+  //   for(int i=0; i<33; i++){
+  //  for(int j=0; j<99; j++){
+  //    // if(j>80)  pion_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
       
-      if(pion_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) pion_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,100./pion_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1));
-      else  pion_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
+  //    if(pion_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) pion_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,100./pion_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1));
+  //    else  pion_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
       
-      if(kaon_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) kaon_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,100./kaon_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1));
-      else  kaon_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
-      if(proton_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) proton_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,100./proton_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1));
-      else  proton_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
-      
-    }
-  }
-*/
-  /* for(int i=0; i<33; i++){
-    double npion=0;
-    double nkaon=0;
-    double nproton=0;
-    for(int j=0; j<99; j++){
-      npion+=pion_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1);
-      nkaon+=kaon_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1);
-      nproton+=proton_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1);
-    }
-    for(int j=0; j<99; j++){
-      if(pion_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) pion_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,pion_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)/npion);
-      else  pion_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
-      
-      if(kaon_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) kaon_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,kaon_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)/nkaon);
-      else  kaon_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
-      if(proton_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) proton_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,proton_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)/nproton);
-      else  proton_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
-    }
-    }*/
+  //    if(kaon_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) kaon_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,100./kaon_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1));
+  //    else  kaon_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
+  //    if(proton_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) proton_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,100./proton_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1));
+  //    else  proton_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
+  //    
+  //  }
+ // }
+
+  // for(int i=0; i<33; i++){
+  //  double npion=0;
+  //  double nkaon=0;
+  //  double nproton=0;
+  //  for(int j=0; j<99; j++){
+  //    npion+=pion_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1);
+  //    nkaon+=kaon_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1);
+  //    nproton+=proton_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1);
+   // }
+  //  for(int j=0; j<99; j++){
+  //    if(pion_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) pion_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,pion_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)/npion);
+  //    else  pion_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
+  //    
+  //    if(kaon_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) kaon_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,kaon_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)/nkaon);
+  //   else  kaon_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
+  //    if(proton_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)>1) proton_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,proton_TOFLastTrkHitFlightLength_truth->GetBinContent(i+1,j+1)/nproton);
+  //    else  proton_TOFLastTrkHitFlightLength_truth->SetBinContent(i+1,j+1,0);
+  //  }
+  //  }
 
   cout<<pion_TOFLastTrkHitFlightLength_truth->Integral(0,33,80,90)<<" "<<kaon_TOFLastTrkHitFlightLength_truth->Integral(0,33,80,90)<<" "<<proton_TOFLastTrkHitFlightLength_truth->Integral(0,33,80,90)<<endl;
   cout<<pion_TOFLastTrkHitFlightLength_truth->Integral()<<" "<<kaon_TOFLastTrkHitFlightLength_truth->Integral()<<" "<<proton_TOFLastTrkHitFlightLength_truth->Integral()<<endl;
@@ -290,6 +291,7 @@ void CalculateParameters::Parameters(bool secondary=false, float momentum_min =1
   proton_TOFLastTrkHitFlightLength_truth->SetLineColor(3);
   proton_TOFLastTrkHitFlightLength_truth->Draw("psame");
   //  return;
+  */
   
   //kaon
   float x_kaon[100], y_kaon[100], ey_kaon[100];
