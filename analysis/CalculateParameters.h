@@ -2,7 +2,7 @@
 // This class has been automatically generated on
 // Mon Nov 19 12:03:47 2018 by ROOT version 6.11/01
 // from TTree Stats/My vertex tree!
-// found on file: pid_l5.root
+// found on file: pid_s5.root
 //////////////////////////////////////////////////////////
 
 #ifndef CalculateParameters_h
@@ -21,8 +21,8 @@
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <TGraphErrors.h>
-#include "../style/Style.C"
-#include "../style/Labels.C"
+#include "style/Style.C"
+#include "style/Labels.C"
 
 // Header file for the classes stored in the TTree if any.
 
@@ -35,25 +35,31 @@ public :
 
    // Declaration of leaf types
    Int_t           nParticles;
-   Int_t           tpcHits[91];   //[nParticles]
-   Float_t         costheta[91];   //[nParticles]
-   Float_t         theta[91];   //[nParticles]
-   Float_t         momentum[91];   //[nParticles]
-   Int_t           type[91];   //[nParticles]
-   Int_t           tagType[91];   //[nParticles]
-   Int_t           type_algo0[91];   //[nParticles]
-   Int_t           type_algo1[91];   //[nParticles]
-   Int_t           type_algo2[91];   //[nParticles]
-   Int_t           type_algo3[91];   //[nParticles]
-   Int_t           type_algo4[91];   //[nParticles]
-   Float_t           likelihood_algo0[91];   //[nParticles]
-   Float_t           likelihood_algo1[91];   //[nParticles]
-   Float_t           likelihood_algo2[91];   //[nParticles]
-   Float_t           likelihood_algo3[91];   //[nParticles]
-   Float_t           likelihood_algo4[91];   //[nParticles]
-   Int_t           trueType[91];   //[nParticles]
-   Int_t           vtxType[91];   //[nParticles]
-   Float_t         dEdx[91];   //[nParticles]
+   Int_t           tpcHits[98];   //[nParticles]
+   Float_t         costheta[98];   //[nParticles]
+   Float_t         theta[98];   //[nParticles]
+   Float_t         momentum[98];   //[nParticles]
+   Int_t           type[98];   //[nParticles]
+   Int_t           tagType[98];   //[nParticles]
+   Int_t           type_algo0[98];   //[nParticles]
+   Int_t           type_algo1[98];   //[nParticles]
+   Int_t           type_algo2[98];   //[nParticles]
+   Int_t           type_algo3[98];   //[nParticles]
+   Int_t           type_algo4[98];   //[nParticles]
+   Float_t         likelihood_algo0[98];   //[nParticles]
+   Float_t         likelihood_algo1[98];   //[nParticles]
+   Float_t         likelihood_algo2[98];   //[nParticles]
+   Float_t         likelihood_algo3[98];   //[nParticles]
+   Float_t         likelihood_algo4[98];   //[nParticles]
+   Float_t         TOFFirstHit[98];   //[nParticles]
+   Float_t         TOFClosestHits[98];   //[nParticles]
+   Float_t         TOFClosestHitsError[98];   //[nParticles]
+   Float_t         TOFFlightLength[98];   //[nParticles]
+   Float_t         TOFLastTrkHit[98];   //[nParticles]
+   Float_t         TOFLastTrkHitFlightLength[98];   //[nParticles]
+   Int_t           vtxType[98];   //[nParticles]
+   Int_t           trueType[98];   //[nParticles]
+   Float_t         dEdx[98];   //[nParticles]
 
    // List of branches
    TBranch        *b_nParticles;   //!
@@ -73,6 +79,12 @@ public :
    TBranch        *b_likelihood_algo2;   //!
    TBranch        *b_likelihood_algo3;   //!
    TBranch        *b_likelihood_algo4;   //!
+   TBranch        *b_TOFFirstHit;   //!
+   TBranch        *b_TOFClosestHits;   //!
+   TBranch        *b_TOFClosestHitsError;   //!
+   TBranch        *b_TOFFlightLength;   //!
+   TBranch        *b_TOFLastTrkHit;   //!
+   TBranch        *b_TOFLastTrkHitFlightLength;   //!
    TBranch        *b_vtxType;   //!
    TBranch        *b_trueType;   //!
    TBranch        *b_dEdx;   //!
@@ -94,6 +106,25 @@ public :
   TH2F *proton_dEdx_truth;
   TH2F *pion_dEdx_truth;
 
+  TH2F *kaon_TOFFirstHit_truth;
+  TH2F *proton_TOFFirstHit_truth;
+  TH2F *pion_TOFFirstHit_truth;
+
+  TH2F *kaon_TOFClosestHits_truth;
+  TH2F *proton_TOFClosestHits_truth;
+  TH2F *pion_TOFClosestHits_truth;
+
+  TH2F *kaon_TOFFlightLength_truth;
+  TH2F *proton_TOFFlightLength_truth;
+  TH2F *pion_TOFFlightLength_truth;
+
+  TH2F *kaon_TOFLastTrkHit_truth;
+  TH2F *proton_TOFLastTrkHit_truth;
+  TH2F *pion_TOFLastTrkHit_truth;
+
+  TH2F *kaon_TOFLastTrkHitFlightLength_truth;
+  TH2F *proton_TOFLastTrkHitFlightLength_truth;
+  TH2F *pion_TOFLastTrkHitFlightLength_truth;
 
 };
 
@@ -105,9 +136,10 @@ CalculateParameters::CalculateParameters(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-     TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_s5_norestorer.root");//pid_ttbar_s5.root");
+     TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("pid.root");//p/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_s5_10107.root");//pid_eL_s5_valencia1.4.root");
       if (!f || !f->IsOpen()) {
-	f = new TFile("/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_s5_norestorer.root");
+	f = new TFile("pid.root");//p/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_s5_10107.root");//pid_eL_s5_valencia1.4.root");
+	
       }
       f->GetObject("Stats",tree);
 
@@ -155,7 +187,6 @@ void CalculateParameters::Init(TTree *tree)
    fChain = tree;
    fCurrent = -1;
    fChain->SetMakeClass(1);
-
    fChain->SetBranchAddress("nParticles", &nParticles, &b_nParticles);
    fChain->SetBranchAddress("tpcHits", tpcHits, &b_tpcHits);
    fChain->SetBranchAddress("costheta", costheta, &b_costheta);
@@ -173,10 +204,17 @@ void CalculateParameters::Init(TTree *tree)
    fChain->SetBranchAddress("likelihood_algo2", likelihood_algo2, &b_likelihood_algo2);
    fChain->SetBranchAddress("likelihood_algo3", likelihood_algo3, &b_likelihood_algo3);
    fChain->SetBranchAddress("likelihood_algo4", likelihood_algo4, &b_likelihood_algo4);
+   fChain->SetBranchAddress("TOFFirstHit", TOFFirstHit, &b_TOFFirstHit);
+   fChain->SetBranchAddress("TOFClosestHits", TOFClosestHits, &b_TOFClosestHits);
+   fChain->SetBranchAddress("TOFClosestHitsError", TOFClosestHitsError, &b_TOFClosestHitsError);
+   fChain->SetBranchAddress("TOFFlightLength", TOFFlightLength, &b_TOFFlightLength);
+   fChain->SetBranchAddress("TOFLastTrkHit", TOFLastTrkHit, &b_TOFLastTrkHit);
+   fChain->SetBranchAddress("TOFLastTrkHitFlightLength", TOFLastTrkHitFlightLength, &b_TOFLastTrkHitFlightLength);
    fChain->SetBranchAddress("vtxType", vtxType, &b_vtxType);
    fChain->SetBranchAddress("trueType", trueType, &b_trueType);
    fChain->SetBranchAddress("dEdx", dEdx, &b_dEdx);
    Notify();
+   
 }
 
 Bool_t CalculateParameters::Notify()

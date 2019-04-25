@@ -2,7 +2,7 @@
 // This class has been automatically generated on
 // Mon Nov 19 12:03:47 2018 by ROOT version 6.11/01
 // from TTree Stats/My vertex tree!
-// found on file: pid_l5.root
+// found on file: pid_s5.root
 //////////////////////////////////////////////////////////
 
 #ifndef kaontagger_h
@@ -21,8 +21,8 @@
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <TGraphErrors.h>
-#include "../style/Style.C"
-#include "../style/Labels.C"
+#include "style/Style.C"
+#include "style/Labels.C"
 
 // Header file for the classes stored in the TTree if any.
 
@@ -154,10 +154,11 @@ kaontagger::kaontagger(TTree *tree) : fChain(0)
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
-   if (tree == 0) {
-     TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_l5.root");//
+   if (tree == 0) { 
+     TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_l5.root");
       if (!f || !f->IsOpen()) {
-	f = new TFile("/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_l5.root");//
+	f = new TFile("/home/irles/WorkArea/BBbar_tests/ntuples/kaontagger/pid_eL_l5.root");
+	
       }
       f->GetObject("Stats",tree);
 

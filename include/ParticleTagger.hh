@@ -83,6 +83,7 @@ private:
   float b1;
   float b2;
   float bfield;
+  float pcut;
 
   int _algorithmID;
 
@@ -119,6 +120,9 @@ private:
   float _likelihood_algo2[MAXV];
   float _likelihood_algo3[MAXV];
   float _likelihood_algo4[MAXV];
+  float _TOFFirstHit[MAXV];
+  float _TOFClosestHits[MAXV];
+  float _TOFClosestHitsError[MAXV];
 
   float _costheta[MAXV];
   float _theta[MAXV];

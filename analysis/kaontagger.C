@@ -1,10 +1,11 @@
 #define kaontagger_cxx
 #include "kaontagger.h"
 #include "TPad.h"
+#include "TFile.h"
 
 void kaontagger::Initialize() {
 
-  SetIrlesStyle();
+  SetQQbarStyle();
   gStyle->SetOptFit(0); 
   gStyle->SetOptStat(0);
   gStyle->SetOptTitle(1);
@@ -190,7 +191,7 @@ void kaontagger::Fill_histos_DST_ID(int i,int algo) {
       //algorithms are
       //0 LikelihoodPID
       //1 LowMomentumID
-      //2 BasixVariablePID
+      //2 BasicVariablePID
       //3 dEdxPID
 
       if(algo==0) {
@@ -253,7 +254,7 @@ void kaontagger::Selection(bool secondary=false, int algo=3, bool combined=false
   if (fChain == 0) return;
    
   Long64_t nentries = fChain->GetEntriesFast();
- 
+  //  nentries=1000;
   Long64_t nbytes = 0, nb = 0;
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
     Long64_t ientry = LoadTree(jentry);
@@ -262,7 +263,7 @@ void kaontagger::Selection(bool secondary=false, int algo=3, bool combined=false
 
     for(int i=0;i<nParticles;i++) {
 
-      bool selection= (vtxType[i]==2  && abs(costheta[i])<0.95 );
+      bool selection= (vtxType[i]==2  && abs(costheta[i])<0.95);
       if (secondary==false) selection=true;
       if (selection == false) continue;
 
@@ -325,10 +326,10 @@ void kaontagger::Selection(bool secondary=false, int algo=3, bool combined=false
   std::cout<<"KAON ID: eff ="<<kaon_dEdx_id->GetEntries()/n_kaon<<"  purity="<<kaon_dEdx_good->GetEntries()/kaon_dEdx_id->GetEntries()<<std::endl;
   std::cout<<"  -------------------------------------------------------------------- "<<std::endl;
 
-  Plots(algo);
-  PlotsCorrected();
+  //Plots(algo);
+  //PlotsCorrected();
   PlotsProjection();
-  if(algo==0) PlotsLikelihood();
+  //if(algo==0) PlotsLikelihood();
   //SimplePlot(algo);
 }
 
@@ -409,36 +410,36 @@ void kaontagger::PlotsProjection() {
 
   gStyle->SetOptStat(0);
   
-  TCanvas* c_dEdx_truth = new TCanvas("c_dEdx_"+title,"c_dEdx_"+title,1000,800);
-  c_dEdx_truth->Divide(3,2);
-  c_dEdx_truth->cd(1);
+  TCanvas* c_dEdx_corrected_truth = new TCanvas("c_dEdx_"+title,"c_dEdx_"+title,1000,800);
+  c_dEdx_corrected_truth->Divide(3,2);
+  c_dEdx_corrected_truth->cd(1);
   gPad->SetLogx();
 
-  pion_dEdx_truth->SetMarkerColor(4);
-  pion_dEdx_truth->SetLineColor(4);
-  pion_dEdx_truth->SetTitle("#frac{dE}{dx}");
-  pion_dEdx_truth->GetYaxis()->SetTitle("dE/dx#times10^{-6}");
-  pion_dEdx_truth->GetXaxis()->SetTitle("p");
-  pion_dEdx_truth->Draw("");
+  pion_dEdx_corrected_truth->SetMarkerColor(4);
+  pion_dEdx_corrected_truth->SetLineColor(4);
+  pion_dEdx_corrected_truth->SetTitle("#frac{dE}{dx}");
+  pion_dEdx_corrected_truth->GetYaxis()->SetTitle("dE/dx#times10^{-6}");
+  pion_dEdx_corrected_truth->GetXaxis()->SetTitle("p");
+  pion_dEdx_corrected_truth->Draw("");
 
-  kaon_dEdx_truth->SetMarkerColor(2);
-  kaon_dEdx_truth->SetLineColor(2);
-  kaon_dEdx_truth->Draw("same");
+  kaon_dEdx_corrected_truth->SetMarkerColor(2);
+  kaon_dEdx_corrected_truth->SetLineColor(2);
+  kaon_dEdx_corrected_truth->Draw("same");
 
-  proton_dEdx_truth->SetMarkerColor(3);
-  proton_dEdx_truth->SetLineColor(3);
-  proton_dEdx_truth->Draw("same");
+  proton_dEdx_corrected_truth->SetMarkerColor(3);
+  proton_dEdx_corrected_truth->SetLineColor(3);
+  proton_dEdx_corrected_truth->Draw("same");
 
   TLegend *leg = new TLegend(0.6,0.55,0.8,0.85);
-  leg->AddEntry(pion_dEdx_truth,"pi","lp");
-  leg->AddEntry(kaon_dEdx_truth,"K","lp");
-  leg->AddEntry(proton_dEdx_truth,"p","lp");
+  leg->AddEntry(pion_dEdx_corrected_truth,"pi","lp");
+  leg->AddEntry(kaon_dEdx_corrected_truth,"K","lp");
+  leg->AddEntry(proton_dEdx_corrected_truth,"p","lp");
   leg->Draw();
 
-  c_dEdx_truth->cd(2);
-  TH1D * proj_pion_1 = pion_dEdx_truth->ProjectionY("proj_pion_1",11,12);
-  TH1D * proj_kaon_1 = kaon_dEdx_truth->ProjectionY("proj_kaon_1",11,12);
-  TH1D * proj_proton_1 = proton_dEdx_truth->ProjectionY("proj_proton_1",11,12);
+  c_dEdx_corrected_truth->cd(2);
+  TH1D * proj_pion_1 = pion_dEdx_corrected_truth->ProjectionY("proj_pion_1",11,12);
+  TH1D * proj_kaon_1 = kaon_dEdx_corrected_truth->ProjectionY("proj_kaon_1",11,12);
+  TH1D * proj_proton_1 = proton_dEdx_corrected_truth->ProjectionY("proj_proton_1",11,12);
   proj_pion_1->SetTitle(" momentum between (1.33,1.67) GeV");
   proj_pion_1->SetLineColor(4);
   proj_pion_1->Draw("histo");
@@ -447,10 +448,10 @@ void kaontagger::PlotsProjection() {
   proj_proton_1->SetLineColor(3);
   proj_proton_1->Draw("histosame");
 
-  c_dEdx_truth->cd(3);
-  TH1D * proj_pion_2 = pion_dEdx_truth->ProjectionY("proj_pion_2",14,15);
-  TH1D * proj_kaon_2 = kaon_dEdx_truth->ProjectionY("proj_kaon_2",14,15);
-  TH1D * proj_proton_2 = proton_dEdx_truth->ProjectionY("proj_proton_2",14,15);
+  c_dEdx_corrected_truth->cd(3);
+  TH1D * proj_pion_2 = pion_dEdx_corrected_truth->ProjectionY("proj_pion_2",14,15);
+  TH1D * proj_kaon_2 = kaon_dEdx_corrected_truth->ProjectionY("proj_kaon_2",14,15);
+  TH1D * proj_proton_2 = proton_dEdx_corrected_truth->ProjectionY("proj_proton_2",14,15);
   proj_pion_2->SetTitle(" momentum between (2,2.5) GeV");
   proj_pion_2->SetLineColor(4);
   proj_pion_2->Draw("histo");
@@ -459,10 +460,10 @@ void kaontagger::PlotsProjection() {
   proj_proton_2->SetLineColor(3);
   proj_proton_2->Draw("histosame");
 
-  c_dEdx_truth->cd(4);
-  TH1D * proj_pion_3 = pion_dEdx_truth->ProjectionY("proj_pion_3",18,19);
-  TH1D * proj_kaon_3 = kaon_dEdx_truth->ProjectionY("proj_kaon_3",18,19);
-  TH1D * proj_proton_3 = proton_dEdx_truth->ProjectionY("proj_proton_3",18,19);
+  c_dEdx_corrected_truth->cd(4);
+  TH1D * proj_pion_3 = pion_dEdx_corrected_truth->ProjectionY("proj_pion_3",18,19);
+  TH1D * proj_kaon_3 = kaon_dEdx_corrected_truth->ProjectionY("proj_kaon_3",18,19);
+  TH1D * proj_proton_3 = proton_dEdx_corrected_truth->ProjectionY("proj_proton_3",18,19);
   proj_pion_3->SetTitle(" momentum between (5,6) GeV");
   proj_pion_3->SetLineColor(4);
   proj_pion_3->Draw("histo");
@@ -471,10 +472,10 @@ void kaontagger::PlotsProjection() {
   proj_proton_3->SetLineColor(3);
   proj_proton_3->Draw("histosame");
 
-  c_dEdx_truth->cd(5);
-  TH1D * proj_pion_4 = pion_dEdx_truth->ProjectionY("proj_pion_4",23,24);
-  TH1D * proj_kaon_4 = kaon_dEdx_truth->ProjectionY("proj_kaon_4",23,24);
-  TH1D * proj_proton_4 = proton_dEdx_truth->ProjectionY("proj_proton_4",23,24);
+  c_dEdx_corrected_truth->cd(5);
+  TH1D * proj_pion_4 = pion_dEdx_corrected_truth->ProjectionY("proj_pion_4",23,24);
+  TH1D * proj_kaon_4 = kaon_dEdx_corrected_truth->ProjectionY("proj_kaon_4",23,24);
+  TH1D * proj_proton_4 = proton_dEdx_corrected_truth->ProjectionY("proj_proton_4",23,24);
   proj_pion_4->SetTitle(" momentum between (10,13.33) GeV");
   proj_pion_4->SetLineColor(4);
   proj_pion_4->Draw("histo");
@@ -483,10 +484,10 @@ void kaontagger::PlotsProjection() {
   proj_proton_4->SetLineColor(3);
   proj_proton_4->Draw("histosame");
 
-  c_dEdx_truth->cd(6);
-  TH1D * proj_pion_5 = pion_dEdx_truth->ProjectionY("proj_pion_5",26,27);
-  TH1D * proj_kaon_5 = kaon_dEdx_truth->ProjectionY("proj_kaon_5",26,27);
-  TH1D * proj_proton_5 = proton_dEdx_truth->ProjectionY("proj_proton_5",26,27);
+  c_dEdx_corrected_truth->cd(6);
+  TH1D * proj_pion_5 = pion_dEdx_corrected_truth->ProjectionY("proj_pion_5",26,27);
+  TH1D * proj_kaon_5 = kaon_dEdx_corrected_truth->ProjectionY("proj_kaon_5",26,27);
+  TH1D * proj_proton_5 = proton_dEdx_corrected_truth->ProjectionY("proj_proton_5",26,27);
   proj_pion_5->SetTitle(" momentum between (30,40) GeV");
   proj_pion_5->SetLineColor(4);
   proj_pion_5->Draw("histo");
@@ -496,29 +497,29 @@ void kaontagger::PlotsProjection() {
   proj_proton_5->Draw("histosame");
 
 
-  TCanvas* c_dEdx_truth2 = new TCanvas("c_dEdx_2_"+title,"c_dEdx_2_"+title,1000,800);
-  c_dEdx_truth2->Divide(3,2);
-  c_dEdx_truth2->cd(1);
+  TCanvas* c_dEdx_corrected_truth2 = new TCanvas("c_dEdx_2_"+title,"c_dEdx_2_"+title,1000,800);
+  c_dEdx_corrected_truth2->Divide(3,2);
+  c_dEdx_corrected_truth2->cd(1);
   gPad->SetLogx();
 
-  pion_dEdx_truth->SetMarkerColor(4);
-  pion_dEdx_truth->SetLineColor(4);
-  pion_dEdx_truth->SetTitle("#frac{dE}{dx}");
-  pion_dEdx_truth->GetYaxis()->SetTitle("dE/dx#times10^{-6}");
-  pion_dEdx_truth->GetXaxis()->SetTitle("p");
-  pion_dEdx_truth->Draw("");
+  pion_dEdx_corrected_truth->SetMarkerColor(4);
+  pion_dEdx_corrected_truth->SetLineColor(4);
+  pion_dEdx_corrected_truth->SetTitle("#frac{dE}{dx}");
+  pion_dEdx_corrected_truth->GetYaxis()->SetTitle("dE/dx#times10^{-6}");
+  pion_dEdx_corrected_truth->GetXaxis()->SetTitle("p");
+  pion_dEdx_corrected_truth->Draw("");
 
-  kaon_dEdx_truth->SetMarkerColor(2);
-  kaon_dEdx_truth->SetLineColor(2);
-  kaon_dEdx_truth->Draw("same");
+  kaon_dEdx_corrected_truth->SetMarkerColor(2);
+  kaon_dEdx_corrected_truth->SetLineColor(2);
+  kaon_dEdx_corrected_truth->Draw("same");
 
-  proton_dEdx_truth->SetMarkerColor(3);
-  proton_dEdx_truth->SetLineColor(3);
-  proton_dEdx_truth->Draw("same");
+  proton_dEdx_corrected_truth->SetMarkerColor(3);
+  proton_dEdx_corrected_truth->SetLineColor(3);
+  proton_dEdx_corrected_truth->Draw("same");
 
   leg->Draw();
 
-  c_dEdx_truth2->cd(2);
+  c_dEdx_corrected_truth2->cd(2);
 
   TH1F *pull_pion_1 = new TH1F("pull_pion_1","pull_pion_1",30,-5,10);
   TH1F *pull_kaon_1 = new TH1F("pull_kaon_1","pull_kaon_1",30,-5,10);
@@ -538,7 +539,7 @@ void kaontagger::PlotsProjection() {
   pull_proton_1->SetLineColor(3);
   pull_proton_1->Draw("histosame");
 
-  c_dEdx_truth2->cd(3);
+  c_dEdx_corrected_truth2->cd(3);
 
   TH1F *pull_pion_2 = new TH1F("pull_pion_2","pull_pion_2",30,-5,10);
   TH1F *pull_kaon_2 = new TH1F("pull_kaon_2","pull_kaon_2",30,-5,10);
@@ -558,7 +559,7 @@ void kaontagger::PlotsProjection() {
   pull_proton_2->SetLineColor(3);
   pull_proton_2->Draw("histosame");
 
-  c_dEdx_truth2->cd(4);
+  c_dEdx_corrected_truth2->cd(4);
 
   TH1F *pull_pion_3 = new TH1F("pull_pion_3","pull_pion_3",30,-5,10);
   TH1F *pull_kaon_3 = new TH1F("pull_kaon_3","pull_kaon_3",30,-5,10);
@@ -578,7 +579,7 @@ void kaontagger::PlotsProjection() {
   pull_proton_3->SetLineColor(3);
   pull_proton_3->Draw("histosame");
 
-  c_dEdx_truth2->cd(5);
+  c_dEdx_corrected_truth2->cd(5);
 
   TH1F *pull_pion_4 = new TH1F("pull_pion_4","pull_pion_4",30,-5,10);
   TH1F *pull_kaon_4 = new TH1F("pull_kaon_4","pull_kaon_4",30,-5,10);
@@ -598,7 +599,7 @@ void kaontagger::PlotsProjection() {
   pull_proton_4->SetLineColor(3);
   pull_proton_4->Draw("histosame");
 
-  c_dEdx_truth2->cd(6);
+  c_dEdx_corrected_truth2->cd(6);
 
   TH1F *pull_pion_5 = new TH1F("pull_pion_5","pull_pion_5",30,-5,10);
   TH1F *pull_kaon_5 = new TH1F("pull_kaon_5","pull_kaon_5",30,-5,10);
@@ -619,9 +620,9 @@ void kaontagger::PlotsProjection() {
   pull_proton_5->Draw("histosame");
 
 
-  TCanvas* c_dEdx_truth3 = new TCanvas("c_dEdx_3_"+title,"c_dEdx_3_"+title,1400,600);
-  c_dEdx_truth3->Divide(3,1);
-  c_dEdx_truth3->cd(1);
+  TCanvas* c_dEdx_corrected_truth3 = new TCanvas("c_dEdx_3_"+title,"c_dEdx_3_"+title,1400,600);
+  c_dEdx_corrected_truth3->Divide(3,1);
+  c_dEdx_corrected_truth3->cd(1);
   gPad->SetLogx();
 
   double x[5],y[5],ex[5],ey[5];
@@ -672,7 +673,7 @@ void kaontagger::PlotsProjection() {
   mean_proton->SetMarkerColor(3);
   mean_proton->Draw("lp");
 
-  c_dEdx_truth3->cd(2);
+  c_dEdx_corrected_truth3->cd(2);
   gPad->SetLogx();
 
   ey[0]=0; ey[1]=0; ey[2]=0; ey[3]=0; ey[4]=0;
@@ -713,7 +714,7 @@ void kaontagger::PlotsProjection() {
   RMS_proton->SetMarkerColor(3);
   RMS_proton->Draw("lp");
 
-  c_dEdx_truth3->cd(3);
+  c_dEdx_corrected_truth3->cd(3);
   gPad->SetLogx();
 
   ey[0]=0; ey[1]=0; ey[2]=0; ey[3]=0; ey[4]=0;
@@ -753,6 +754,43 @@ void kaontagger::PlotsProjection() {
   RMSnorm_proton->SetLineColor(3);
   RMSnorm_proton->SetMarkerColor(3);
   RMSnorm_proton->Draw("lp");
+
+  TFile *file = new TFile("test.root","RECREATE");
+  file->cd();
+  mean_pion->SetName("mean_pion");
+  mean_kaon->SetName("mean_kaon");
+  mean_proton->SetName("mean_proton");
+  mean_pion->Write();
+  mean_kaon->Write();
+  mean_proton->Write();
+
+  RMSnorm_pion->SetName("RMSnorm_pion");
+  RMSnorm_kaon->SetName("RMSnorm_kaon");
+  RMSnorm_proton->SetName("RMSnorm_proton");
+  RMSnorm_pion->Write();
+  RMSnorm_kaon->Write();
+  RMSnorm_proton->Write();
+
+  proj_proton_1->Write();
+  proj_proton_2->Write();
+  proj_proton_3->Write();
+  proj_proton_4->Write();
+  proj_proton_5->Write();
+
+  proj_kaon_1->Write();
+  proj_kaon_2->Write();
+  proj_kaon_3->Write();
+  proj_kaon_4->Write();
+  proj_kaon_5->Write();
+
+  proj_pion_1->Write();
+  proj_pion_2->Write();
+  proj_pion_3->Write();
+  proj_pion_4->Write();
+  proj_pion_5->Write();
+
+  
+  file->Close();
   
 }
 
@@ -837,7 +875,7 @@ void kaontagger::Plots(int algo) {
   leg->AddEntry(kaon_dEdx_truth,"K","lp");
   leg->AddEntry(proton_dEdx_truth,"p","lp");
   leg->AddEntry(muon_dEdx_truth,"mu","lp");
-  leg->AddEntry(other_dEdx_truth,"other","lp");
+  //  leg->AddEntry(other_dEdx_truth,"other","lp");
   leg->Draw();
 
 
