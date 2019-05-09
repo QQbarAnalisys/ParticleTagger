@@ -4,7 +4,10 @@
 # 30th January 2019
 ##########################################################
 
-Instructions to run the analysis+ ploting:
+# -------------------------------------------------------------------------------------------------------------------------
+#|| BASIC PLOTTING STUFF
+# -------------------------------------------------------------------------------------------------------------------------
+Instructions to run the kanotagger.C 
 --------------------------------------------------
 First, change appropiately the input file name in both places of the kaontagger.h, function kaontagger::kaontagger(TTree *tree) 
 Example:
@@ -44,3 +47,27 @@ $ -> Plotting
   virtual void     PlotsLikelihood(); --> Plot the likelihood value for the identified kaons
   virtual void     SimplePlot(int);
   
+# -------------------------------------------------------------------------------------------------------------------------
+#|| Calculate Parameters to apply the KaonTagger
+# -------------------------------------------------------------------------------------------------------------------------
+
+1) Modify CalculateParameteres.h to use the proper root file (in CalculateParameteres::CalculateParameteres(TTree *tree)
+
+> root -l CalculateParameters.C+
+root [1] CalculateParameters a
+a.Parameters(true,2)//true = only secondary tracks, 2= minimum momentum of these tracks in GeV
+
+Output --> ONE OF THE LINES IS TO BE COPIED IN THE PROCESSOR XML FILE
+
+eff_input>0.45:     purity=0.822935 eff=0.452079;    slope=0.017984 upper=0.10838 lower=0.0978378
+eff_input>0.5:     purity=0.819069 eff=0.511006;    slope=0.017984 upper=0.10838 lower=0.0955461
+eff_input>0.55:     purity=0.812799 eff=0.553457;    slope=0.017984 upper=0.108838 lower=0.0946294
+eff_input>0.6:     purity=0.806376 eff=0.604067;    slope=0.017984 upper=0.109297 lower=0.0932544
+eff_input>0.65:     purity=0.798903 eff=0.650374;    slope=0.017984 upper=0.110213 lower=0.0937127
+eff_input>0.7:     purity=0.790551 eff=0.705234;    slope=0.017984 upper=0.110672 lower=0.0918793
+eff_input>0.75:     purity=0.782162 eff=0.751305;    slope=0.017984 upper=0.11113 lower=0.0900459
+eff_input>0.8:     purity=0.770552 eff=0.80202;    slope=0.017984 upper=0.111588 lower=0.0868375
+eff_input>0.85:     purity=0.760274 eff=0.851686;    slope=0.017984 upper=0.112505 lower=0.0882125
+eff_input>0.9:     purity=0.748108 eff=0.901272;    slope=0.017984 upper=0.113422 lower=0.0891292
+eff_input>0.95:     purity=0.736546 eff=0.950151;    slope=0.017984 upper=0.11388 lower=0.0872959
+
